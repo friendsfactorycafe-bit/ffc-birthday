@@ -1,33 +1,41 @@
 /**
  * MAIN PAGE - FRIENDS FACTORY CAFE VADODARA
- * The main home page for Friends Factory Cafe - Vadodara
+ * Best Birthday Celebration Venue in Vadodara
  */
 
 import { Metadata } from "next";
 import FFCHomePage from "@/components/ffc-home-page";
 import { siteConfig } from "@/lib/ffc-config";
 
-// Dynamic metadata for Friends Factory Cafe
+// Dynamic metadata for Friends Factory Cafe - Birthday Focus
 export async function generateMetadata(): Promise<Metadata> {
   return {
-    title: `${siteConfig.name} | Romantic Celebrations for Couples in Vadodara`,
-    description: `${siteConfig.tagline}. Premium romantic celebration services for couples in Vadodara. Candlelight dinners, birthday surprises, anniversary celebrations, proposals & more.`,
+    title: `Best Birthday Celebration in Vadodara | ${siteConfig.name} - #1 Birthday Venue`,
+    description: `Best birthday celebration venue in Vadodara! 🎂 Premium rooftop birthday surprises, balloon decorations, midnight birthday parties, couple birthday celebrations & unforgettable birthday experiences. Book now!`,
     keywords: [
-      'friends factory cafe vadodara',
-      'romantic celebration vadodara',
-      'candlelight dinner vadodara',
+      'birthday celebration vadodara',
       'birthday surprise vadodara',
-      'anniversary celebration vadodara',
-      'couples only cafe vadodara',
-      'rooftop dinner vadodara',
-      'private dining vadodara'
+      'birthday party venues vadodara',
+      'birthday party places vadodara',
+      'birthday decoration vadodara',
+      'birthday balloon decoration vadodara',
+      'midnight birthday surprise vadodara',
+      'birthday surprise for boyfriend vadodara',
+      'birthday surprise for girlfriend vadodara',
+      'birthday surprise for husband vadodara',
+      'birthday surprise for wife vadodara',
+      'rooftop birthday party vadodara',
+      'private birthday celebration vadodara',
+      'birthday packages vadodara',
+      'best birthday venue vadodara',
+      'friends factory cafe vadodara'
     ],
     alternates: {
       canonical: siteConfig.website,
     },
     openGraph: {
-      title: `${siteConfig.name} | Romantic Celebrations`,
-      description: siteConfig.tagline,
+      title: `Best Birthday Celebration Venue in Vadodara | ${siteConfig.name}`,
+      description: 'Vadodara\'s #1 birthday celebration venue! Premium rooftop birthday surprises, decorations, cake & unforgettable birthday experiences.',
       url: siteConfig.website,
       type: "website",
       locale: "en_IN",

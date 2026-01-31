@@ -133,8 +133,8 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
     return (
       <Card className={`${variant === 'modal' ? '' : 'shadow-lg'}`}>
         <CardContent className="py-12 text-center">
-          <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center bg-amber-100">
-            <CheckCircle className="h-8 w-8 text-amber-600" />
+          <div className="w-16 h-16 rounded-full mx-auto mb-4 flex items-center justify-center bg-gradient-to-br from-pink-100 to-purple-100">
+            <CheckCircle className="h-8 w-8 text-pink-600" />
           </div>
           <h3 className="text-xl font-semibold mb-2">Booking Request Sent!</h3>
           <p className="text-muted-foreground">
@@ -148,7 +148,7 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
   return (
     <Card className={`${variant === 'modal' ? 'border-0 shadow-none' : 'shadow-lg'} ${variant === 'hero' ? 'bg-white/60 backdrop-blur-md border-white/20' : ''} overflow-hidden`}>
       {variant !== 'modal' && (
-        <div className={`${variant === 'hero' ? 'bg-gradient-to-r from-amber-600/95 to-orange-600/95' : 'bg-gradient-to-r from-amber-600 to-orange-600'} p-4 text-white`}>
+        <div className={`${variant === 'hero' ? 'bg-gradient-to-r from-pink-500/95 via-purple-500/95 to-blue-500/95' : 'bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500'} p-4 text-white`}>
           <CardTitle className="text-xl flex items-center gap-2">
             <Gift className="h-5 w-5" />
             Reserve Your Moment
@@ -162,7 +162,7 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
       {variant === 'modal' && onClose && (
         <div className="flex justify-between items-center p-4 border-b">
           <div>
-            <CardTitle className="text-xl text-amber-600">Reserve Now</CardTitle>
+            <CardTitle className="text-xl bg-gradient-to-r from-pink-600 via-purple-600 to-blue-600 bg-clip-text text-transparent">Reserve Now</CardTitle>
             <CardDescription>Get instant confirmation on WhatsApp</CardDescription>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose}>
@@ -176,7 +176,7 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
           {/* Name Field */}
           <div className="space-y-2">
             <Label htmlFor="name" className="flex items-center gap-2">
-              <User className="h-4 w-4 text-amber-600" />
+              <User className="h-4 w-4 text-pink-600" />
               Your Name *
             </Label>
             <Input
@@ -193,7 +193,7 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
           {/* Phone Field */}
           <div className="space-y-2">
             <Label htmlFor="phone" className="flex items-center gap-2">
-              <Phone className="h-4 w-4 text-amber-600" />
+              <Phone className="h-4 w-4 text-pink-600" />
               Phone Number *
             </Label>
             <Input
@@ -212,7 +212,7 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
           {/* City Field */}
           <div className="space-y-2">
             <Label htmlFor="city" className="flex items-center gap-2">
-              <MapPin className="h-4 w-4 text-amber-600" />
+              <MapPin className="h-4 w-4 text-pink-600" />
               City *
             </Label>
             <Input
@@ -253,7 +253,7 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
             {/* Occasion Field */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2 text-sm font-medium">
-                <Gift className="h-4 w-4 text-amber-600" />
+                <Gift className="h-4 w-4 text-purple-600" />
                 Your Moment *
               </Label>
               <Select onValueChange={(value) => setValue('occasion', value)}>
@@ -279,7 +279,7 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
             {/* Date Field */}
             <div className="space-y-2">
               <Label htmlFor="occasionDate" className="flex items-center gap-2 text-sm font-medium">
-                <Calendar className="h-4 w-4 text-amber-600" />
+                <Calendar className="h-4 w-4 text-purple-600" />
                 Select Date *
               </Label>
               <Input
@@ -297,7 +297,7 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
             {/* Time Slot Field */}
             <div className="space-y-2">
               <Label className="flex items-center gap-2 text-sm font-medium">
-                <Clock className="h-4 w-4 text-amber-600" />
+                <Clock className="h-4 w-4 text-blue-600" />
                 Preferred Time *
               </Label>
               <Select onValueChange={(value) => setValue('preferredTime', value)}>
@@ -322,7 +322,7 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
           <Button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white py-5 text-base font-semibold mt-2"
+            className="w-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white py-5 text-base font-semibold mt-2"
           >
             {isSubmitting ? (
               <>
@@ -382,7 +382,7 @@ export function FFCBookNowButton({ pageTitle, packageName, packageSlug, classNam
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
-        <Button className={`bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white ${className}`}>
+        <Button className={`bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 hover:from-pink-600 hover:via-purple-600 hover:to-blue-600 text-white ${className}`}>
           <Gift className="h-5 w-5 mr-2" />
           Book Now
         </Button>

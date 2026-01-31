@@ -26,18 +26,18 @@ export default function AreasPage() {
       <FFCHeader />
       
       {/* Breadcrumb */}
-      <div className="bg-amber-50 py-4">
+      <div className="bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 py-4">
         <div className="container mx-auto px-4">
           <nav className="flex items-center gap-2 text-sm">
-            <Link href="/" className="text-gray-500 hover:text-amber-600">Home</Link>
+            <Link href="/" className="text-gray-500 hover:text-pink-500">Home</Link>
             <ChevronRight className="h-4 w-4 text-gray-400" />
-            <span className="text-amber-600 font-medium">Areas We Serve</span>
+            <span className="text-pink-500 font-medium">Areas We Serve</span>
           </nav>
         </div>
       </div>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-amber-600 via-orange-500 to-amber-700 text-white py-16 md:py-20">
+      <section className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white py-16 md:py-20">
         <div className="container mx-auto px-4 text-center">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 font-serif">
             Areas We Serve in Vadodara
@@ -63,10 +63,10 @@ export default function AreasPage() {
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3 md:gap-4">
             {vadodaraAreas.map((area) => (
               <Link key={area.slug} href={`/${area.slug}`}>
-                <Card className="h-full hover:shadow-lg transition-all hover:-translate-y-1 border-amber-100 group cursor-pointer">
+                <Card className="h-full hover:shadow-lg transition-all hover:-translate-y-1 border-pink-100 group cursor-pointer">
                   <CardContent className="p-4 flex items-center gap-2">
-                    <MapPin className="h-4 w-4 text-amber-500 flex-shrink-0" />
-                    <span className="text-sm md:text-base font-medium text-gray-700 group-hover:text-amber-600 transition-colors">
+                    <MapPin className="h-4 w-4 text-pink-500 flex-shrink-0" />
+                    <span className="text-sm md:text-base font-medium text-gray-700 group-hover:text-pink-500 transition-colors">
                       {area.name}
                     </span>
                   </CardContent>
@@ -78,7 +78,7 @@ export default function AreasPage() {
       </section>
 
       {/* Location Info */}
-      <section className="py-16 bg-amber-50">
+      <section className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-2xl md:text-3xl font-bold mb-6 font-serif text-gray-800">
@@ -88,19 +88,19 @@ export default function AreasPage() {
               {siteConfig.address}
             </p>
             <div className="bg-white rounded-xl p-6 shadow-lg">
-              <h3 className="font-bold text-lg mb-4 text-amber-600">Why Choose Us?</h3>
+              <h3 className="font-bold text-lg mb-4 text-pink-600">Why Choose Us?</h3>
               <div className="grid md:grid-cols-3 gap-4 text-sm text-gray-600">
-                <div className="p-4 bg-amber-50 rounded-lg">
+                <div className="p-4 bg-pink-50 rounded-lg">
                   <span className="text-2xl mb-2 block">🚗</span>
                   <strong>Easy Access</strong>
                   <p>Located on Sevasi Canal Road with ample parking</p>
                 </div>
-                <div className="p-4 bg-amber-50 rounded-lg">
+                <div className="p-4 bg-pink-50 rounded-lg">
                   <span className="text-2xl mb-2 block">🏙️</span>
                   <strong>Central Location</strong>
                   <p>15-20 mins from most areas of Vadodara</p>
                 </div>
-                <div className="p-4 bg-amber-50 rounded-lg">
+                <div className="p-4 bg-pink-50 rounded-lg">
                   <span className="text-2xl mb-2 block">🌃</span>
                   <strong>Rooftop Views</strong>
                   <p>Stunning panoramic views of the city skyline</p>
@@ -112,7 +112,7 @@ export default function AreasPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-r from-amber-600 to-orange-500 text-white">
+      <section className="py-16 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold mb-4 font-serif">
             Ready to Celebrate?
@@ -122,7 +122,7 @@ export default function AreasPage() {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <Link href="/packages">
-              <Button size="lg" className="bg-white text-amber-600 hover:bg-amber-50">
+              <Button size="lg" className="bg-white text-pink-600 hover:bg-pink-50">
                 View Packages
               </Button>
             </Link>

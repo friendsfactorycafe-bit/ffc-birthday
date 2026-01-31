@@ -1,42 +1,45 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import FFCPackageDetailPage from '@/components/ffc-package-detail-page';
-import { packages, getPackageBySlug } from '@/lib/ffc-config';
+import { packages } from '@/lib/ffc-config';
 
-interface PackagePageProps {
+interface PageProps {
   params: Promise<{ slug: string }>;
 }
 
+// Generate static params for all packages
 export async function generateStaticParams() {
   return packages.map((pkg) => ({
     slug: pkg.slug,
   }));
 }
 
-export async function generateMetadata({ params }: PackagePageProps): Promise<Metadata> {
+// Generate metadata for each package
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-  const pkg = getPackageBySlug(slug);
-  
+  const pkg = packages.find((p) => p.slug === slug);
+
   if (!pkg) {
     return {
-      title: 'Package Not Found',
+      title: 'Package Not Found | Friends Factory Cafe',
     };
   }
 
   return {
-    title: `${pkg.name} ${pkg.emoji} | Friends Factory Cafe Vadodara`,
-    description: `${pkg.shortDescription} Book ${pkg.name} at Friends Factory Cafe Vadodara for ₹${pkg.price.toLocaleString()}. Perfect for ${pkg.perfectFor.join(', ')}.`,
-    keywords: `${pkg.name}, ${pkg.perfectFor.join(', ')}, romantic celebration vadodara, friends factory cafe`,
+    title: `${pkg.name} | Birthday Celebration Package Vadodara | Friends Factory Cafe`,
+    description: `Book ${pkg.name} for ₹${pkg.price}. ${pkg.shortDescription}. Perfect for ${pkg.perfectFor.slice(0, 3).join(', ')} in Vadodara. 3 hours private celebration with decorations, cake & more!`,
+    keywords: `${pkg.name}, ${pkg.perfectFor.join(', ')}, birthday package vadodara, birthday celebration venue, rooftop birthday vadodara, glass house birthday`,
     openGraph: {
       title: `${pkg.name} | Friends Factory Cafe`,
       description: pkg.shortDescription,
+      images: [pkg.thumbnail],
     },
   };
 }
 
-export default async function PackagePage({ params }: PackagePageProps) {
+export default async function Page({ params }: PageProps) {
   const { slug } = await params;
-  const pkg = getPackageBySlug(slug);
+  const pkg = packages.find((p) => p.slug === slug);
 
   if (!pkg) {
     notFound();

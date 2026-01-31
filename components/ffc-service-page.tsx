@@ -2,6 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ChevronRight, Star, Check, Phone, MessageCircle, MapPin } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -25,20 +26,20 @@ export default function FFCServicePage({ service }: ServicePageProps) {
       <FFCHeader />
       
       {/* Breadcrumb */}
-      <div className="bg-amber-50 py-4">
+      <div className="bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 py-4">
         <div className="container mx-auto px-4">
           <nav className="flex items-center gap-2 text-sm">
-            <Link href="/" className="text-gray-500 hover:text-amber-600">Home</Link>
+            <Link href="/" className="text-gray-500 hover:text-pink-500">Home</Link>
             <ChevronRight className="h-4 w-4 text-gray-400" />
-            <Link href="/services" className="text-gray-500 hover:text-amber-600">Services</Link>
+            <Link href="/services" className="text-gray-500 hover:text-pink-500">Services</Link>
             <ChevronRight className="h-4 w-4 text-gray-400" />
-            <span className="text-amber-600 font-medium">{service.name}</span>
+            <span className="text-pink-500 font-medium">{service.name}</span>
           </nav>
         </div>
       </div>
 
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-amber-600 via-orange-500 to-amber-700 text-white py-16 md:py-20">
+      <section className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white py-16 md:py-20">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
@@ -54,7 +55,7 @@ export default function FFCServicePage({ service }: ServicePageProps) {
               
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
                 <a href={`tel:${siteConfig.phone}`}>
-                  <Button size="lg" className="bg-white text-amber-600 hover:bg-amber-50 w-full sm:w-auto">
+                  <Button size="lg" className="bg-white text-pink-500 hover:bg-pink-50 w-full sm:w-auto">
                     <Phone className="h-5 w-5 mr-2" />
                     Call Now
                   </Button>
@@ -103,7 +104,7 @@ export default function FFCServicePage({ service }: ServicePageProps) {
               { emoji: "🍽️", title: "Delicious Food", desc: "Curated café-style menu" },
               { emoji: "📸", title: "Photo-Ready", desc: "Instagram-worthy décor" },
             ].map((item, index) => (
-              <Card key={index} className="border-amber-100 text-center">
+              <Card key={index} className="border-pink-100 text-center">
                 <CardContent className="p-6">
                   <span className="text-4xl mb-4 block">{item.emoji}</span>
                   <h3 className="font-semibold mb-2">{item.title}</h3>
@@ -116,7 +117,7 @@ export default function FFCServicePage({ service }: ServicePageProps) {
       </section>
 
       {/* Packages for this Service */}
-      <section className="py-16 bg-amber-50">
+      <section className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4 font-serif">
@@ -128,18 +129,23 @@ export default function FFCServicePage({ service }: ServicePageProps) {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
             {relatedPackages.map((pkg) => (
               <Link key={pkg.id} href={`/packages/${pkg.slug}`}>
-                <Card className="h-full hover:shadow-lg transition-all hover:-translate-y-1 border-amber-100 group">
-                  <div className="aspect-video bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
-                    <span className="text-5xl">{pkg.emoji}</span>
+                <Card className="h-full hover:shadow-lg transition-all hover:-translate-y-1 border-pink-100 group overflow-hidden">
+                  <div className="aspect-video relative overflow-hidden">
+                    <Image
+                      src={pkg.thumbnail}
+                      alt={pkg.name}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
                   </div>
                   <CardContent className="p-4">
-                    <h3 className="font-semibold mb-1 group-hover:text-amber-600 transition-colors line-clamp-1">
+                    <h3 className="font-semibold mb-1 group-hover:text-pink-500 transition-colors line-clamp-1">
                       {pkg.name}
                     </h3>
                     <p className="text-gray-600 text-sm line-clamp-2 mb-2">
                       {pkg.shortDescription}
                     </p>
-                    <p className="text-lg font-bold text-amber-600">
+                    <p className="text-lg font-bold text-pink-500">
                       {formatPrice(pkg.price)}
                     </p>
                   </CardContent>
@@ -150,7 +156,7 @@ export default function FFCServicePage({ service }: ServicePageProps) {
           
           <div className="text-center mt-8">
             <Link href="/packages">
-              <Button className="bg-amber-600 hover:bg-amber-700">
+              <Button className="bg-pink-500 hover:bg-pink-600">
                 View All Packages <ChevronRight className="h-4 w-4 ml-2" />
               </Button>
             </Link>
@@ -175,11 +181,11 @@ export default function FFCServicePage({ service }: ServicePageProps) {
                 href={`/${keyword.slug}`}
                 className="block"
               >
-                <Card className="border-amber-100 hover:border-amber-300 hover:shadow-md transition-all group">
+                <Card className="border-pink-100 hover:border-pink-300 hover:shadow-md transition-all group">
                   <CardContent className="p-4">
-                    <h3 className="font-medium group-hover:text-amber-600 transition-colors flex items-center justify-between">
+                    <h3 className="font-medium group-hover:text-pink-500 transition-colors flex items-center justify-between">
                       {keyword.title}
-                      <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-amber-600" />
+                      <ChevronRight className="h-4 w-4 text-gray-400 group-hover:text-pink-500" />
                     </h3>
                   </CardContent>
                 </Card>
@@ -190,10 +196,10 @@ export default function FFCServicePage({ service }: ServicePageProps) {
       </section>
 
       {/* Areas Section */}
-      <section className="py-16 bg-amber-50">
+      <section className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <Badge className="mb-4 bg-amber-100 text-amber-700 border-amber-200">
+            <Badge className="mb-4 bg-pink-100 text-pink-700 border-pink-200">
               <MapPin className="h-4 w-4 mr-2" /> Service Areas
             </Badge>
             <h2 className="text-3xl font-bold mb-4 font-serif">
@@ -207,14 +213,14 @@ export default function FFCServicePage({ service }: ServicePageProps) {
               <Link 
                 key={area.slug}
                 href={`/${area.slug}`}
-                className="px-4 py-2 bg-white rounded-full text-gray-700 hover:bg-amber-600 hover:text-white transition-colors border border-amber-200 text-sm"
+                className="px-4 py-2 bg-white rounded-full text-gray-700 hover:bg-pink-500 hover:text-white transition-colors border border-pink-200 text-sm"
               >
                 {service.name} in {area.name}
               </Link>
             ))}
             <Link 
               href="/areas"
-              className="px-4 py-2 bg-amber-600 rounded-full text-white hover:bg-amber-700 transition-colors text-sm"
+              className="px-4 py-2 bg-pink-500 rounded-full text-white hover:bg-pink-600 transition-colors text-sm"
             >
               View All Areas
             </Link>
@@ -236,15 +242,15 @@ export default function FFCServicePage({ service }: ServicePageProps) {
               
               <div className="space-y-4">
                 <div className="flex items-center gap-3">
-                  <Check className="h-5 w-5 text-amber-600" />
+                  <Check className="h-5 w-5 text-pink-500" />
                   <span>No commitment booking request</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Check className="h-5 w-5 text-amber-600" />
+                  <Check className="h-5 w-5 text-pink-500" />
                   <span>Quick WhatsApp confirmation</span>
                 </div>
                 <div className="flex items-center gap-3">
-                  <Check className="h-5 w-5 text-amber-600" />
+                  <Check className="h-5 w-5 text-pink-500" />
                   <span>Flexible rescheduling available</span>
                 </div>
               </div>
@@ -258,7 +264,7 @@ export default function FFCServicePage({ service }: ServicePageProps) {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-16 bg-amber-50">
+      <section className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4 font-serif">
@@ -285,7 +291,7 @@ export default function FFCServicePage({ service }: ServicePageProps) {
                 answer: "Absolutely! We love creating personalized experiences. Share your ideas and preferences, and we'll make them happen."
               }
             ].map((faq, index) => (
-              <AccordionItem key={index} value={`faq-${index}`} className="bg-white rounded-lg border border-amber-100 px-6">
+              <AccordionItem key={index} value={`faq-${index}`} className="bg-white rounded-lg border border-pink-100 px-6">
                 <AccordionTrigger className="text-left font-medium hover:no-underline">
                   {faq.question}
                 </AccordionTrigger>

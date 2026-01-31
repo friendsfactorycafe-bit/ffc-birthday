@@ -17,7 +17,7 @@ export default function FFCPackagesPage() {
       <FFCHeader />
       
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-amber-600 via-orange-500 to-amber-700 text-white py-16">
+      <section className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white py-16">
         <div className="container mx-auto px-4 text-center">
           <Badge className="mb-4 bg-white/20 text-white border-white/30">
             <Gift className="h-4 w-4 mr-2" /> 8 Unique Setups
@@ -37,23 +37,23 @@ export default function FFCPackagesPage() {
           <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
             {packages.map((pkg, index) => (
               <Link key={pkg.id} href={`/packages/${pkg.slug}`}>
-                <Card className="overflow-hidden border-amber-100 hover:shadow-xl transition-all group h-full">
+                <Card className="overflow-hidden border-pink-100 hover:shadow-xl transition-all group h-full">
                   {/* Image */}
-                  <div className="aspect-square bg-gradient-to-br from-amber-100 to-orange-100 relative overflow-hidden">
+                  <div className="aspect-square bg-gradient-to-br from-pink-100 to-purple-100 relative overflow-hidden">
                     <Image
                       src={pkg.thumbnail}
                       alt={pkg.name}
                       fill
                       className="object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <Badge className="absolute top-2 left-2 md:top-4 md:left-4 bg-amber-600 text-white text-xs">
+                    <Badge className="absolute top-2 left-2 md:top-4 md:left-4 bg-pink-500 text-white text-xs">
                       Setup {index + 1}
                     </Badge>
                   </div>
                   
                   {/* Content */}
                   <CardContent className="p-3 md:p-4">
-                    <h2 className="text-sm md:text-base lg:text-lg font-bold mb-1 group-hover:text-amber-600 transition-colors line-clamp-2">
+                    <h2 className="text-sm md:text-base lg:text-lg font-bold mb-1 group-hover:text-pink-500 transition-colors line-clamp-2">
                       {pkg.name} {pkg.emoji}
                     </h2>
                     <p className="text-gray-600 text-xs md:text-sm mb-2 line-clamp-2 hidden md:block">
@@ -61,7 +61,7 @@ export default function FFCPackagesPage() {
                     </p>
                     
                     {/* Price */}
-                    <p className="text-lg md:text-xl font-bold text-amber-600">
+                    <p className="text-lg md:text-xl font-bold text-pink-500">
                       {formatPrice(pkg.price)}
                     </p>
                   </CardContent>
@@ -73,7 +73,7 @@ export default function FFCPackagesPage() {
       </section>
 
       {/* What's Included Section */}
-      <section className="py-16 bg-amber-50">
+      <section className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4 font-serif">What's Included in Every Package</h2>

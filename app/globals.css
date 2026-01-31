@@ -17,21 +17,21 @@
   --popover: oklch(0.98 0.003 0);
   --popover-foreground: oklch(0.2 0.02 35);
 
-  /* Primary - Modern Teal/Cyan */
-  --primary: oklch(0.5 0.15 200);
+  /* Primary - Vibrant Pink (Rainbow theme) */
+  --primary: oklch(0.65 0.25 330);
   --primary-foreground: oklch(0.99 0.002 0);
 
-  /* Secondary - Soft Slate */
-  --secondary: oklch(0.65 0.05 200);
+  /* Secondary - Purple */
+  --secondary: oklch(0.55 0.2 290);
   --secondary-foreground: oklch(0.99 0.002 0);
 
   /* Muted tones */
   --muted: oklch(0.92 0.005 0);
   --muted-foreground: oklch(0.5 0.02 35);
 
-  /* Accent - Warm Peach */
-  --accent: oklch(0.75 0.12 50);
-  --accent-foreground: oklch(0.2 0.02 35);
+  /* Accent - Blue (Rainbow theme) */
+  --accent: oklch(0.6 0.2 250);
+  --accent-foreground: oklch(0.99 0.002 0);
 
   /* Destructive */
   --destructive: oklch(0.55 0.22 25);
@@ -40,7 +40,7 @@
   /* Borders and inputs */
   --border: oklch(0.92 0.005 0);
   --input: oklch(0.92 0.005 0);
-  --ring: oklch(0.5 0.15 200);
+  --ring: oklch(0.65 0.25 330);
 
   /* Charts */
   --chart-1: oklch(0.5 0.15 200);
