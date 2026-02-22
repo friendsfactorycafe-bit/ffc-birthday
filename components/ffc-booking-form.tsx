@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/navigation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
-import { Calendar, Phone, User, Gift, MessageCircle, X, Send, Loader2, CheckCircle, MapPin, Clock, ChevronDown, Check, ChevronRight } from 'lucide-react';
+import { Calendar, Phone, User, Gift, MessageCircle, X, Send, Loader2, CheckCircle, MapPin, Clock, ChevronDown, Check, ChevronRight, Heart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -17,7 +17,8 @@ import { siteConfig, packages } from '@/lib/ffc-config';
 
 // Form validation schema
 const ffcBookingSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  yourName: z.string().min(2, 'Your name must be at least 2 characters'),
+  partnerName: z.string().min(2, "Partner's name must be at least 2 characters"),
   phone: z.string().min(10, 'Enter valid 10-digit phone number').max(10, 'Enter valid 10-digit phone number').regex(/^[6-9]\d{9}$/, 'Enter valid Indian mobile number'),
   city: z.string().min(1, 'Please enter your city'),
   occasionDate: z.string().min(1, 'Please select a date'),
@@ -115,7 +116,8 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
   useEffect(() => {
     const saved = loadFormData();
     if (saved) {
-      if (saved.name) setValue('name', saved.name);
+      if (saved.yourName) setValue('yourName', saved.yourName);
+      if (saved.partnerName) setValue('partnerName', saved.partnerName);
       if (saved.phone) setValue('phone', saved.phone);
       if (saved.city) setValue('city', saved.city);
       if (saved.occasionDate) setValue('occasionDate', saved.occasionDate);
@@ -154,7 +156,8 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
     const selectedPkg = data.selectedPackage ? packages.find(p => p.slug === data.selectedPackage) : null;
     
     let message = `*New Booking Inquiry - Friends Factory Cafe*\n\n`;
-    message += `*Name:* ${data.name}\n`;
+    message += `*Your Name:* ${data.yourName}\n`;
+    message += `*Partner's Name:* ${data.partnerName}\n`;
     message += `*Phone:* ${data.phone}\n`;
     message += `*City:* ${data.city}\n`;
     message += `*Date:* ${data.occasionDate}\n`;
@@ -243,20 +246,37 @@ export function FFCBookingForm({ pageTitle, variant = 'default', packageName, de
       
       <CardContent className="p-6">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          {/* Name Field */}
+          {/* Your Name Field */}
           <div className="space-y-2">
-            <Label htmlFor="name" className="flex items-center gap-2">
+            <Label htmlFor="yourName" className="flex items-center gap-2">
               <User className="h-4 w-4 text-pink-600" />
               Your Name *
             </Label>
             <Input
-              id="name"
-              placeholder="Enter your full name"
-              {...register('name')}
-              className={errors.name ? 'border-red-500' : ''}
+              id="yourName"
+              placeholder="Enter your name"
+              {...register('yourName')}
+              className={errors.yourName ? 'border-red-500' : ''}
             />
-            {errors.name && (
-              <p className="text-red-500 text-sm">{errors.name.message}</p>
+            {errors.yourName && (
+              <p className="text-red-500 text-sm">{errors.yourName.message}</p>
+            )}
+          </div>
+
+          {/* Partner's Name Field */}
+          <div className="space-y-2">
+            <Label htmlFor="partnerName" className="flex items-center gap-2">
+              <Heart className="h-4 w-4 text-pink-600" />
+              Your Partner&apos;s Name *
+            </Label>
+            <Input
+              id="partnerName"
+              placeholder="Enter your partner's name"
+              {...register('partnerName')}
+              className={errors.partnerName ? 'border-red-500' : ''}
+            />
+            {errors.partnerName && (
+              <p className="text-red-500 text-sm">{errors.partnerName.message}</p>
             )}
           </div>
 

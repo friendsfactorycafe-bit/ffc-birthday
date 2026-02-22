@@ -15,6 +15,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { FFCHeader, FFCFooter } from '@/components/ffc-layout';
 import { FFCBookingForm, FFCWhatsAppFloat } from '@/components/ffc-booking-form';
 import { siteConfig, packages, serviceCategories, vadodaraAreas, formatPrice, getAllBlogPosts, BlogPost } from '@/lib/ffc-config';
+import { generateBreadcrumbSchema, generateLocalBusinessSchema } from '@/lib/schema-generator';
 
 // Experience features - Birthday focused
 const experienceFeatures = [
@@ -368,8 +369,9 @@ export default function FFCHomePage() {
     <div className="min-h-screen bg-white">
       <FFCHeader />
       
+      <main>
       {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white overflow-hidden">
+      <section aria-label="Birthday Celebration Vadodara - Hero" className="relative bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white overflow-hidden">
         {/* Background Image Slider */}
         <div className="absolute inset-0">
           {heroSlides.map((slide, index) => (
@@ -465,7 +467,7 @@ export default function FFCHomePage() {
       </section>
 
       {/* Packages Section */}
-      <section className="py-12 md:py-20 bg-gradient-to-b from-pink-50 via-purple-50 to-white">
+      <section aria-label="Birthday Celebration Packages" className="py-12 md:py-20 bg-gradient-to-b from-pink-50 via-purple-50 to-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-8 md:mb-16">
             <Badge className="mb-4 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 border-pink-200">
@@ -521,7 +523,7 @@ export default function FFCHomePage() {
       </section>
 
       {/* Services Section - Birthday Services */}
-      <section className="py-20 bg-white">
+      <section aria-label="Birthday Celebration Services" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 border-pink-200">
@@ -563,7 +565,7 @@ export default function FFCHomePage() {
       </section>
 
       {/* Experience Features - Birthday Focused */}
-      <section className="py-20 bg-white">
+      <section aria-label="What's Included" className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 border-pink-200">
@@ -658,7 +660,7 @@ export default function FFCHomePage() {
       </section>
 
       {/* Areas We Serve */}
-      <section className="py-20 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+      <section aria-label="Areas We Serve in Vadodara" className="py-20 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 border-pink-200">
@@ -915,7 +917,7 @@ export default function FFCHomePage() {
       <BlogSection />
 
       {/* FAQ Section */}
-      <section className="py-20 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+      <section aria-label="Frequently Asked Questions" className="py-20 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-gradient-to-r from-pink-100 to-purple-100 text-pink-700 border-pink-200">
@@ -942,7 +944,7 @@ export default function FFCHomePage() {
       </section>
 
       {/* CTA Section - Birthday Focused */}
-      <section className="py-20 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white">
+      <section aria-label="Book Your Birthday Celebration" className="py-20 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl md:text-4xl font-bold mb-4 font-serif">
             🎂 Ready to Plan the Perfect Birthday? 🎂
@@ -966,6 +968,53 @@ export default function FFCHomePage() {
           </div>
         </div>
       </section>
+
+      {/* FAQ Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            "mainEntity": faqs.map(faq => ({
+              "@type": "Question",
+              "name": faq.question,
+              "acceptedAnswer": {
+                "@type": "Answer",
+                "text": faq.answer,
+              },
+            })),
+          })
+        }}
+      />
+
+      {/* Breadcrumb Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateBreadcrumbSchema([
+            { name: 'Home', url: siteConfig.website }
+          ]))
+        }}
+      />
+
+      {/* LocalBusiness Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(generateLocalBusinessSchema({
+            name: siteConfig.name,
+            url: siteConfig.website,
+            phone: siteConfig.phone,
+            address: siteConfig.address,
+            city: siteConfig.city,
+            description: siteConfig.description,
+            priceRange: '₹4700 - ₹14900',
+            image: `${siteConfig.website}/og-image.jpg`,
+          }))
+        }}
+      />
+      </main>
 
       <FFCFooter />
       <FFCWhatsAppFloat />

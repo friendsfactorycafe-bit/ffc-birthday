@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight, Star, Check, Phone, Heart, Gift, Clock, MapPin, Sparkles, Camera, Users } from 'lucide-react';
@@ -10,8 +10,10 @@ import { Badge } from '@/components/ui/badge';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { FFCHeader, FFCFooter } from '@/components/ffc-layout';
 import { FFCBookingForm, FFCWhatsAppFloat, FFCBookNowButton } from '@/components/ffc-booking-form';
-import { FFCGalleryCompact } from '@/components/ffc-gallery';
+import { FFCGalleryCompact, birthdayHeroImages } from '@/components/ffc-gallery';
 import { ServiceCategory, packages, siteConfig, formatPrice } from '@/lib/ffc-config';
+import { generateExpandedContent, generateFAQContent } from '@/lib/seo-content-engine';
+import { generateBreadcrumbSchema, buildServiceBreadcrumbs } from '@/lib/schema-generator';
 
 interface ServiceCategoryPageProps {
   service: ServiceCategory;
@@ -347,17 +349,61 @@ const serviceCategoryContent: Record<string, {
 };
 
 export default function FFCServiceCategoryPage({ service }: ServiceCategoryPageProps) {
+  // Hero slider state
+  const [heroSlide, setHeroSlide] = useState(0);
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setHeroSlide((prev) => (prev + 1) % 3);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   const content = serviceCategoryContent[service.slug] || serviceCategoryContent['birthday-surprise'];
   const relatedPackages = packages.slice(0, 4);
+
+  // SEO Content Expansion: 700+ unique words + 10 unique FAQs with schema
+  const seoContent = generateExpandedContent(service.name);
+  const seoFAQs = generateFAQContent(service.name);
+
+  // Merge: handcrafted FAQs first, then fill to 10 from SEO engine
+  const allFAQs = [...content.faqs];
+  const existingQuestions = new Set(allFAQs.map(f => f.question.toLowerCase()));
+  for (const faq of seoFAQs.faqs) {
+    if (allFAQs.length >= 10) break;
+    if (!existingQuestions.has(faq.question.toLowerCase())) {
+      allFAQs.push(faq);
+      existingQuestions.add(faq.question.toLowerCase());
+    }
+  }
+
+  const faqSchemaMarkup = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": allFAQs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer,
+      },
+    })),
+  };
+
+  // Breadcrumb Schema for AI visibility
+  const breadcrumbSchema = generateBreadcrumbSchema(
+    buildServiceBreadcrumbs(siteConfig.website, siteConfig.name, service.name, service.slug)
+  );
 
   return (
     <div className="min-h-screen bg-white">
       <FFCHeader />
       
+      <main>
       {/* Breadcrumb */}
       <div className="bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 py-4">
         <div className="container mx-auto px-4">
-          <nav className="flex items-center gap-2 text-sm flex-wrap">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm flex-wrap">
             <Link href="/" className="text-gray-500 hover:text-pink-500">Home</Link>
             <ChevronRight className="h-4 w-4 text-gray-400" />
             <Link href="/services" className="text-gray-500 hover:text-pink-500">Services</Link>
@@ -367,9 +413,44 @@ export default function FFCServiceCategoryPage({ service }: ServiceCategoryPageP
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white py-16 md:py-24">
-        <div className="container mx-auto px-4">
+      {/* Hero Section — Homepage-style slider with booking form */}
+      <section aria-label={`${service.name} - Hero`} className="relative bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white overflow-hidden">
+        {/* Background Image Slider */}
+        <div className="absolute inset-0">
+          {birthdayHeroImages.slice(0, 3).map((src, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === heroSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <Image
+                src={src}
+                alt={`${service.name} Vadodara - Slide ${index + 1}`}
+                fill
+                className="object-cover"
+                priority={index === 0}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
+
+        {/* Slide Indicators */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {birthdayHeroImages.slice(0, 3).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setHeroSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === heroSlide ? 'bg-white w-8' : 'bg-white/50'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        <div className="container mx-auto px-4 py-20 md:py-28 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
               <Badge className="mb-4 bg-white/20 text-white border-white/30">
@@ -408,13 +489,18 @@ export default function FFCServiceCategoryPage({ service }: ServiceCategoryPageP
               </div>
             </div>
             
-            {/* Hero Visual */}
-            <div className="hidden lg:flex justify-center">
-              <div className="w-80 h-80 rounded-full bg-white/10 flex items-center justify-center">
-                <span className="text-[150px]">{service.emoji}</span>
-              </div>
+            {/* Hero Booking Form — Desktop */}
+            <div className="hidden lg:block">
+              <FFCBookingForm variant="hero" pageTitle={service.name} />
             </div>
           </div>
+        </div>
+      </section>
+
+      {/* Mobile Booking Form — Above the fold on mobile */}
+      <section className="lg:hidden bg-gradient-to-r from-pink-50 via-purple-50 to-blue-50 py-8">
+        <div className="container mx-auto px-4">
+          <FFCBookingForm pageTitle={service.name} />
         </div>
       </section>
 
@@ -578,6 +664,20 @@ export default function FFCServiceCategoryPage({ service }: ServiceCategoryPageP
         </div>
       </section>
 
+      {/* SEO Expanded Content — 700+ unique words */}
+      <section className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+        <div className="container mx-auto px-4">
+          <div className="max-w-4xl mx-auto prose prose-lg">
+            {seoContent.paragraphs.map((section, idx) => (
+              <div key={`seo-${idx}`} className="mb-8">
+                <h3 className="text-xl font-bold mb-4 text-gray-800">{section.heading}</h3>
+                <p className="text-gray-600 leading-relaxed">{section.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* FAQs */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-4">
@@ -586,7 +686,7 @@ export default function FFCServiceCategoryPage({ service }: ServiceCategoryPageP
           </h2>
           <div className="max-w-3xl mx-auto">
             <Accordion type="single" collapsible className="space-y-4">
-              {content.faqs.map((faq, index) => (
+              {allFAQs.map((faq, index) => (
                 <AccordionItem key={index} value={`faq-${index}`} className="border rounded-lg px-4">
                   <AccordionTrigger className="text-left font-medium text-gray-800 hover:text-pink-500">
                     {faq.question}
@@ -602,7 +702,7 @@ export default function FFCServiceCategoryPage({ service }: ServiceCategoryPageP
       </section>
 
       {/* Gallery */}
-      <section className="py-16 bg-gray-50">
+      <section aria-label="Gallery" className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-2xl md:text-3xl font-bold mb-8 font-serif text-center text-gray-800">
             {service.name} Gallery
@@ -612,7 +712,7 @@ export default function FFCServiceCategoryPage({ service }: ServiceCategoryPageP
       </section>
 
       {/* Booking Form */}
-      <section className="py-16 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500">
+      <section aria-label="Book Now" className="py-16 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-white">
@@ -644,6 +744,17 @@ export default function FFCServiceCategoryPage({ service }: ServiceCategoryPageP
         </div>
       </section>
 
+      {/* FAQ Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaMarkup) }}
+      />
+      {/* Breadcrumb Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+
       {/* Schema Markup - Local Business */}
       <script
         type="application/ld+json"
@@ -674,6 +785,7 @@ export default function FFCServiceCategoryPage({ service }: ServiceCategoryPageP
           })
         }}
       />
+      </main>
 
       <FFCFooter />
       <FFCWhatsAppFloat />

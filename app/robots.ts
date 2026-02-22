@@ -1,6 +1,6 @@
 /**
  * FRIENDS FACTORY CAFE - SEO OPTIMIZED ROBOTS.TXT
- * Domain: friendsfactorycafe.com
+ * Domain: birthdaysurprisevadodara.com
  * 
  * Configuration for search engine crawlers:
  * - Allow all public pages
@@ -14,7 +14,7 @@
 import { MetadataRoute } from "next";
 
 export default function robots(): MetadataRoute.Robots {
-  const baseUrl = "https://friendsfactorycafe.com";
+  const baseUrl = "https://birthdaysurprisevadodara.com";
   
   return {
     rules: [
@@ -23,21 +23,16 @@ export default function robots(): MetadataRoute.Robots {
         userAgent: "*",
         allow: [
           "/",
-          "/about",
           "/contact",
-          "/menu",
           "/packages",
           "/packages/*",
-          "/services",
-          "/virtual-tour",
+          "/areas",
         ],
         disallow: [
           "/api/",
           "/admin/",
           "/private/",
-          "/_next/",
           "/leads",
-          "/*.json$",
         ],
       },
       {

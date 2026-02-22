@@ -1,10 +1,10 @@
 /**
  * FRIENDS FACTORY CAFE - SEO OPTIMIZED SITEMAP
- * Domain: friendsfactorycafe.com
+ * Domain: birthdaysurprisevadodara.com
  * 
- * Total Pages: 200+ including:
+ * Total Pages: 175+ including:
  * - 1 Homepage (priority 1.0)
- * - 7 Static pages (priority 0.8)
+ * - 3 Static pages (contact, packages, areas)
  * - 8 Service category pages (priority 0.9)
  * - 8 Package detail pages (priority 0.85)
  * - 120 Keyword pages (priority 0.85) - Main SEO pages
@@ -21,7 +21,7 @@ import {
 } from "@/lib/ffc-config";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = "https://friendsfactorycafe.com";
+  const baseUrl = "https://birthdaysurprisevadodara.com";
   const currentDate = new Date().toISOString();
   
   const entries: MetadataRoute.Sitemap = [];
@@ -38,12 +38,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // ==================== STATIC PAGES ====================
   // Core pages with regular updates
   const staticPages = [
-    { path: '/about', priority: 0.8, freq: 'monthly' as const },
     { path: '/contact', priority: 0.9, freq: 'monthly' as const },
-    { path: '/menu', priority: 0.8, freq: 'weekly' as const },
     { path: '/packages', priority: 0.9, freq: 'weekly' as const },
-    { path: '/services', priority: 0.9, freq: 'weekly' as const },
-    { path: '/virtual-tour', priority: 0.7, freq: 'monthly' as const },
     { path: '/areas', priority: 0.8, freq: 'weekly' as const },
   ];
   

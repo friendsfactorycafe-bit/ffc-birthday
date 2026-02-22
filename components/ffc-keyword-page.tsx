@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { ChevronRight, Star, Check, Phone, MessageCircle, MapPin, Gift, Clock, Heart } from 'lucide-react';
@@ -14,6 +14,8 @@ import { FFCGalleryCompact, birthdayHeroImages } from '@/components/ffc-gallery'
 import { ServiceCategory, ServiceKeyword, packages, vadodaraAreas, siteConfig, formatPrice } from '@/lib/ffc-config';
 import { generateKeywordPageContent } from '@/lib/ffc-unique-content';
 import { getKeywordContent, UniqueKeywordContent } from '@/lib/ffc-keyword-content';
+import { generateExpandedContent, generateFAQContent } from '@/lib/seo-content-engine';
+import { generateBreadcrumbSchema, generateServiceSchema, buildKeywordBreadcrumbs } from '@/lib/schema-generator';
 
 interface KeywordPageProps {
   service: ServiceCategory;
@@ -21,6 +23,16 @@ interface KeywordPageProps {
 }
 
 export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
+  // Hero slider state
+  const [heroSlide, setHeroSlide] = useState(0);
+  
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setHeroSlide((prev) => (prev + 1) % 3);
+    }, 5000);
+    return () => clearInterval(timer);
+  }, []);
+
   // Get related packages
   const relatedPackages = packages.slice(0, 4);
 
@@ -36,14 +48,64 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
   // Use handcrafted content if available, otherwise use generated
   const hasUniqueContent = !!handcraftedContent;
 
+  // SEO Content Expansion: 700+ words + 10 unique FAQs with schema
+  const seoContent = generateExpandedContent(keyword.title);
+  const seoFAQs = generateFAQContent(keyword.title);
+
+  // Merge FAQs: handcrafted/generated first, then fill to 10 from SEO engine
+  const existingFAQs = hasUniqueContent ? handcraftedContent!.faqs : generatedContent.faqContent;
+  const allFAQs = [...existingFAQs];
+  const existingQuestions = new Set(allFAQs.map(f => f.question.toLowerCase()));
+  for (const faq of seoFAQs.faqs) {
+    if (allFAQs.length >= 10) break;
+    if (!existingQuestions.has(faq.question.toLowerCase())) {
+      allFAQs.push(faq);
+      existingQuestions.add(faq.question.toLowerCase());
+    }
+  }
+
+  // Breadcrumb Schema for AI visibility
+  const breadcrumbSchema = generateBreadcrumbSchema(
+    buildKeywordBreadcrumbs(siteConfig.website, siteConfig.name, keyword.title, keyword.slug)
+  );
+
+  // Service Schema for AI visibility
+  const serviceSchema = generateServiceSchema({
+    serviceName: keyword.title + ' in ' + siteConfig.city,
+    serviceDescription: keyword.metaDescription,
+    serviceUrl: `${siteConfig.website}/${keyword.slug}`,
+    providerName: siteConfig.name,
+    providerUrl: siteConfig.website,
+    providerPhone: siteConfig.phone,
+    providerAddress: siteConfig.address,
+    providerCity: siteConfig.city,
+    priceRange: '₹4700 - ₹14900',
+    areaServed: siteConfig.city,
+  });
+
+  // Build final FAQ schema with all FAQs
+  const faqSchemaMarkup = {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": allFAQs.map(faq => ({
+      "@type": "Question",
+      "name": faq.question,
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": faq.answer,
+      },
+    })),
+  };
+
   return (
     <div className="min-h-screen bg-white">
       <FFCHeader />
       
+      <main>
       {/* Breadcrumb */}
       <div className="bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50 py-4">
         <div className="container mx-auto px-4">
-          <nav className="flex items-center gap-2 text-sm flex-wrap">
+          <nav aria-label="Breadcrumb" className="flex items-center gap-2 text-sm flex-wrap">
             <Link href="/" className="text-gray-500 hover:text-pink-500">Home</Link>
             <ChevronRight className="h-4 w-4 text-gray-400" />
             <Link href="/services" className="text-gray-500 hover:text-pink-500">Services</Link>
@@ -55,9 +117,44 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
         </div>
       </div>
 
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white py-16 md:py-20">
-        <div className="container mx-auto px-4">
+      {/* Hero Section — Homepage-style slider with booking form */}
+      <section aria-label={`${keyword.title} - Hero`} className="relative bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white overflow-hidden">
+        {/* Background Image Slider */}
+        <div className="absolute inset-0">
+          {birthdayHeroImages.slice(0, 3).map((src, index) => (
+            <div
+              key={index}
+              className={`absolute inset-0 transition-opacity duration-1000 ${
+                index === heroSlide ? 'opacity-100' : 'opacity-0'
+              }`}
+            >
+              <Image
+                src={src}
+                alt={`${keyword.title} Vadodara - Slide ${index + 1}`}
+                fill
+                className="object-cover"
+                priority={index === 0}
+              />
+            </div>
+          ))}
+        </div>
+        <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
+
+        {/* Slide Indicators */}
+        <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2 z-20">
+          {birthdayHeroImages.slice(0, 3).map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setHeroSlide(index)}
+              className={`w-3 h-3 rounded-full transition-all ${
+                index === heroSlide ? 'bg-white w-8' : 'bg-white/50'
+              }`}
+              aria-label={`Go to slide ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        <div className="container mx-auto px-4 py-20 md:py-28 relative z-10">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="text-center lg:text-left">
               <Badge className="mb-4 bg-white/20 text-white border-white/30">
@@ -96,54 +193,23 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
               </div>
             </div>
             
-            {/* Hero Visual - Real Images */}
+            {/* Hero Booking Form — Desktop */}
             <div className="hidden lg:block">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-4">
-                  <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
-                    <Image
-                      src={birthdayHeroImages[0]}
-                      alt={`${keyword.title} in Vadodara`}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                  </div>
-                  <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-square">
-                    <Image
-                      src={birthdayHeroImages[2]}
-                      alt={`${keyword.title} setup Vadodara`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-4 pt-8">
-                  <div className="relative rounded-2xl overflow-hidden shadow-xl aspect-square">
-                    <Image
-                      src={birthdayHeroImages[1]}
-                      alt={`${keyword.title} decoration Vadodara`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                  <div className="relative rounded-2xl overflow-hidden shadow-2xl aspect-[4/3]">
-                    <Image
-                      src={birthdayHeroImages[3]}
-                      alt={`${keyword.title} venue Vadodara`}
-                      fill
-                      className="object-cover"
-                    />
-                  </div>
-                </div>
-              </div>
+              <FFCBookingForm variant="hero" pageTitle={keyword.title} />
             </div>
           </div>
         </div>
       </section>
 
+      {/* Mobile Booking Form — Above the fold on mobile */}
+      <section className="lg:hidden bg-gradient-to-r from-pink-50 via-purple-50 to-blue-50 py-8">
+        <div className="container mx-auto px-4">
+          <FFCBookingForm pageTitle={keyword.title} />
+        </div>
+      </section>
+
       {/* Main Content */}
-      <section className="py-16 bg-white">
+      <section aria-label={`About ${keyword.title}`} className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-3 gap-12">
             {/* Main Content */}
@@ -273,6 +339,14 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
                     </div>
                   )}
                 </div>
+
+                {/* SEO Expanded Content — 700+ unique words */}
+                {seoContent.paragraphs.map((section, idx) => (
+                  <div key={`seo-${idx}`} className="mb-8">
+                    <h3 className="text-xl font-bold mb-4">{section.heading}</h3>
+                    <p className="text-gray-600 leading-relaxed">{section.body}</p>
+                  </div>
+                ))}
               </article>
 
               {/* Packages */}
@@ -351,7 +425,7 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
       </section>
 
       {/* Related Keywords */}
-      <section className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+      <section aria-label="Related Services" className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold mb-4 font-serif">
@@ -380,7 +454,7 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
       </section>
 
       {/* Areas */}
-      <section className="py-16 bg-white">
+      <section aria-label="Service Areas in Vadodara" className="py-16 bg-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <Badge className="mb-4 bg-pink-100 text-pink-700 border-pink-200">
@@ -405,8 +479,51 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
         </div>
       </section>
 
+      {/* AI-Friendly Service Summary — structured for AI crawlers */}
+      <section aria-label="Service Summary" className="py-12 bg-white">
+        <div className="container mx-auto px-4 max-w-4xl">
+          <h2 className="text-2xl font-bold mb-6 font-serif text-center">
+            {keyword.title} — Quick Overview
+          </h2>
+          <dl className="grid md:grid-cols-2 gap-x-8 gap-y-4 text-sm">
+            <div>
+              <dt className="font-semibold text-gray-900">Service</dt>
+              <dd className="text-gray-600">{keyword.title}</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-gray-900">Location</dt>
+              <dd className="text-gray-600">Vadodara, Gujarat, India</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-gray-900">Venue</dt>
+              <dd className="text-gray-600">{siteConfig.name}</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-gray-900">Price Range</dt>
+              <dd className="text-gray-600">₹4,700 – ₹14,900</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-gray-900">Duration</dt>
+              <dd className="text-gray-600">3 Hours Private Celebration</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-gray-900">Includes</dt>
+              <dd className="text-gray-600">Decorations, Cake, Music, Photography Setup</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-gray-900">Booking</dt>
+              <dd className="text-gray-600">WhatsApp, Phone, or Online Form</dd>
+            </div>
+            <div>
+              <dt className="font-semibold text-gray-900">Contact</dt>
+              <dd className="text-gray-600">{siteConfig.phone}</dd>
+            </div>
+          </dl>
+        </div>
+      </section>
+
       {/* FAQ */}
-      <section className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
+      <section aria-label="Frequently Asked Questions" className="py-16 bg-gradient-to-br from-pink-50 via-purple-50 to-blue-50">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="text-center mb-12">
             <h2 className="text-2xl font-bold mb-4 font-serif">
@@ -415,7 +532,7 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
           </div>
           
           <Accordion type="single" collapsible className="space-y-4">
-            {(hasUniqueContent ? handcraftedContent!.faqs : generatedContent.faqContent).map((faq, index) => (
+            {allFAQs.map((faq, index) => (
               <AccordionItem key={index} value={`faq-${index}`} className="bg-white rounded-lg border border-pink-100 px-6">
                 <AccordionTrigger className="text-left font-medium hover:no-underline">
                   {faq.question}
@@ -430,7 +547,7 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
       </section>
 
       {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white">
+      <section aria-label="Book Now" className="py-16 bg-gradient-to-br from-pink-500 via-purple-500 to-blue-500 text-white">
         <div className="container mx-auto px-4 text-center max-w-3xl">
           <h2 className="text-2xl md:text-3xl font-bold mb-4 font-serif">
             Ready for Your {keyword.title}?
@@ -455,6 +572,23 @@ export default function FFCKeywordPage({ service, keyword }: KeywordPageProps) {
 
       {/* Gallery Section */}
       <FFCGalleryCompact title={`${keyword.title} Gallery`} maxItems={8} />
+      </main>
+
+      {/* FAQ Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchemaMarkup) }}
+      />
+      {/* Breadcrumb Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
+      />
+      {/* Service Schema JSON-LD */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceSchema) }}
+      />
 
       <FFCFooter />
       <FFCWhatsAppFloat />
